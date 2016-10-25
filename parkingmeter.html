@@ -42,6 +42,12 @@
 			$(document).ready(function(){
 				$("#parking-meter-id").val(QueryString.id);
 			});
+			Stripe.setPublishableKey('pk_test_vnGPshxbrOXWD0hJnmox32lZ');			
+			Stripe.applePay.checkAvailability(function(available) {
+			  	if (available) {
+			    	document.getElementById('apple-pay-button').style.display = 'block';
+			  	}
+			});
 		</script>
 		<style>
 			#apple-pay-button {
