@@ -1,9 +1,21 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">	
 		<script
 		  	src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
 		  	integrity="sha256-/SIrNqv8h6QGKDuNoLGA4iret+kyesCkHGzVUUV0shc="
-		  	crossorigin="anonymous"></script>
+		  	crossorigin="anonymous"></script>	
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>	
+
+		<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
 		<script type='text/javascript'>
 			var QueryString = function () {
 			  // This function is anonymous, is executed immediately and 
@@ -27,11 +39,49 @@
 			  } 
 			  return query_string;
 			}();
-
-			$('#meter-id').html(QueryString.id);
+			$(document).ready(function(){
+				$("#parking-meter-id").val(QueryString.id);
+			});
 		</script>
+		<style>
+			#apple-pay-button {
+			    display: none;
+			    background-color: black;
+			    background-image: -webkit-named-image(apple-pay-logo-white);
+			    background-size: 100% 100%;
+			    background-origin: content-box;
+			    background-repeat: no-repeat;
+			    width: 100%;
+			    height: 44px;
+			    padding: 10px 0;
+			    border-radius: 10px;
+			}
+		</style>		
 	</head>
 	<body>
-		<div id='meter-id'></div>
+		<div class="container-fluid">
+			<div class="row">				
+				<form class="col-lg-4 col-md-6 col-sm-8 center-block">
+					<div class="form-group">
+				    	<label for="parking-meter-id">Parking Meter #</label>
+					    <input type="text" class="form-control" id="parking-meter-id" placeholder="Park Meter ID">
+					</div>
+					<div class="form-group">
+						<label for="parking-time">Parking Time</label>
+						<select class="form-control">
+					  		<option value="15">0:15</option>
+					  		<option value="30">0:30</option>
+					  		<option value="45">0:45</option>
+					  		<option value="60">1:00</option>
+					  		<option value="75">1:15</option>
+					  		<option value="90">1:30</option>					  		
+					  		<option value="105">1:45</option>					  		
+					  		<option value="120">2:00</option>					  		
+						</select>
+					</div>
+				</form>
+				<button id="apple-pay-button"></button>				
+			</div>
+		</div>
 	</body>
 </html>
