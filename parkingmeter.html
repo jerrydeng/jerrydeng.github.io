@@ -39,15 +39,52 @@
 			  } 
 			  return query_string;
 			}();
+
+			//set meter-id
 			$(document).ready(function(){
 				$("#parking-meter-id").val(QueryString.id);
 			});
+
+			//init stripe
 			Stripe.setPublishableKey('pk_test_vnGPshxbrOXWD0hJnmox32lZ');			
 			Stripe.applePay.checkAvailability(function(available) {
 			  	if (available) {
 			    	document.getElementById('apple-pay-button').style.display = 'block';
 			  	}
 			});
+
+			$('#apple-pay-button').on('click', beginApplePay);
+
+			function beginApplePay() {
+				var mins = parseFloat($("#parking-time"));
+				var amount = 0.25 * parseInt(mins/15);
+				alert(mins);
+				console.log(mins);
+				console.log(amount);
+			  	var paymentRequest = {
+				    countryCode: 'US',
+				    currencyCode: 'USD',
+				    total: {
+				      	label: 'Parking Meter',
+				      	amount: amount				      	
+				    }
+				};
+			  	var session = Stripe.applePay.buildSession(paymentRequest,
+			    	function(result, completion) {
+			    		$.post('http://locahost:3000/charges', { token: result.token.id }).done(function() {
+					    	completion(ApplePaySession.STATUS_SUCCESS);
+
+			      			window.location.href = '/thankyou.html?amount=' + amount + '&mins=' + mins ;
+					    }).fail(function() {
+			      			completion(ApplePaySession.STATUS_FAILURE);
+			    		});
+
+					}, function(error) {
+					    console.log(error.message);
+					});
+
+			  	session.begin();
+			}
 		</script>
 		<style>
 			#apple-pay-button {
@@ -70,11 +107,11 @@
 				<form class="col-lg-4 col-md-6 col-sm-8 center-block">
 					<div class="form-group">
 				    	<label for="parking-meter-id">Parking Meter #</label>
-					    <input type="text" class="form-control" id="parking-meter-id" placeholder="Park Meter ID">
+					    <input type="text" class="form-control" id="parking-meter-id">
 					</div>
 					<div class="form-group">
 						<label for="parking-time">Parking Time</label>
-						<select class="form-control">
+						<select class="form-control" id="parking-time">
 					  		<option value="15">0:15</option>
 					  		<option value="30">0:30</option>
 					  		<option value="45">0:45</option>
@@ -85,8 +122,10 @@
 					  		<option value="120">2:00</option>					  		
 						</select>
 					</div>
-				</form>
-				<button id="apple-pay-button"></button>				
+					<div class="form-group">
+						<button id="apple-pay-button"></button>					
+					</div>
+				</form>				
 			</div>
 		</div>
 	</body>
